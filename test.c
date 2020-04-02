@@ -18,6 +18,7 @@ int main(int argc, char **argv, char **env)
 
 	getline(&buff, &buffsize, stdin);
 
+
 	buff[buffsize - 2] = '\0';
 
 	res = execve(buff, argv, env);
