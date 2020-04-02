@@ -6,6 +6,7 @@ int main(int argc, char **argv, char **env)
 {
 	size_t buffsize = 100;
 	char *buff = malloc(sizeof(char) * buffsize);
+	int error;
 
 	if (buff == NULL)
 	{
@@ -17,7 +18,11 @@ int main(int argc, char **argv, char **env)
 
 	getline(&buff, &buffsize, stdin);
 
-	execve(buff, argv, env);
+	error = execve(buff, argv, env);
+	if (error == -1)
+	  {
+	    printf("Unknown command.\n");
+	  }
 
 	return (0);
 }
