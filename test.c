@@ -4,9 +4,9 @@
 
 int main(int argc, char **argv, char **env)
 {
-	size_t buffsize = 100;
+	int res = 0;
+	size_t buffsize = 1;
 	char *buff = malloc(sizeof(char) * buffsize);
-	int error;
 
 	if (buff == NULL)
 	{
@@ -18,11 +18,13 @@ int main(int argc, char **argv, char **env)
 
 	getline(&buff, &buffsize, stdin);
 
-	error = execve(buff, argv, env);
-	if (error == -1)
-	  {
-	    printf("Unknown command.\n");
-	  }
+
+	buff[buffsize - 2] = '\0';
+
+	res = execve(buff, argv, env);
+
+	if (res == -1)
+		printf("%s: 1: %s does not exist\n", argv[0], buff);
 
 	return (0);
 }
