@@ -11,8 +11,8 @@ int main(int argc, char **argv, char **env)
 	char *buff;
 
 	while (1)
-	{
-		cpid = fork()
+	  {
+	  cpid = fork();
 		if (cpid == -1)
 		{
 			printf("Fork failed");
@@ -33,10 +33,12 @@ int main(int argc, char **argv, char **env)
 		  if (res == -1)
 		    printf("%s: 1: %s does not exist\n", argv[0], buff);
 		  free(buff);
-		  break;
+		  exit;
 		}
 		else
-		  wait(NULL);
-	}
+		  wait(0);
+		if (isatty(res) != 1)
+		  return (0);
+	  }
 	return (0);
 }
