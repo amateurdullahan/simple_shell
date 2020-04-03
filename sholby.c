@@ -40,6 +40,8 @@ int main(int argc, char **argv, char **env)
 		else
 		{
 			wait(NULL);
+			if (isatty(res) != 1)
+			  return (0);
 		}
 	}
 	return (0);
