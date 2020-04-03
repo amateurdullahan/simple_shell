@@ -12,7 +12,7 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		cpid = fork();
+		cpid = fork()
 		if (cpid == -1)
 		{
 			printf("Fork failed");
@@ -38,6 +38,5 @@ int main(int argc, char **argv, char **env)
 		else
 		  wait(NULL);
 	}
-
 	return (0);
 }
