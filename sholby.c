@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 
@@ -29,10 +28,6 @@ int main(int argc, char **argv, char **env)
 			}
 			printf("$ ");
 			getline(&buff, &buffsize, stdin);
-			if (buff[0] == '\0')
-				printf("\nNull char\n");
-			else
-				printf("\nNot null char\n");
 			while (buff[i] != '\n' && buff[i] != '\0')
 				i++;
 			buff[i] = '\0';
