@@ -3,12 +3,14 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <string.h>
 
 int main(int argc, char **argv, char **env)
 {
 	int i = 0, res, cpid;
 	size_t buffsize = 1;
-	char *buff;
+	char *buff, **sargs;
+	const char *s = " ";
 
 	while (1)
 	{
@@ -31,10 +33,15 @@ int main(int argc, char **argv, char **env)
 			while (buff[i] != '\n' && buff[i] != '\0')
 				i++;
 			buff[i] = '\0';
-			res = execve(buff, argv, env);
+			sargs = malloc(100);
+			sargs[0] = strtok(buff, s);
+			for (i = 0; sargs[i] != NULL; i++)
+				sargs[i + 1] = strtok(NULL, s);
+			res = execve(sargs[0], sargs, env);
 			if (res == -1)
-				printf("%s: 1: %s does not exist\n", argv[0], buff);
+				printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
 			free(buff);
+			free(sargs);
 			break;
 		}
 		else
@@ -45,4 +52,42 @@ int main(int argc, char **argv, char **env)
 		}
 	}
 	return (0);
+}
+
+
+char **tokenize(char *buff)
+{
+  int i, j, k, l = 0, m = 0, tkount = 0;
+  char **tokens;
+
+  for (i = 0; buff[i]; i++)
+    {
+      if (buff[i] == ' ' || buff[i] == '\0')
+	{
+	  tkount++;
+	}
+    }
+  tokens = malloc(sizeof(char *) * (tkount + 1));
+
+  for (i = 0; i < tkount; i++)
+    {
+      k = 0;
+      while (buff[k+l] != ' ' && buff[k+l] != '\0')
+	{
+	  k++;
+	}
+      l += k;
+      if (buff[l] != '\0')
+	l++;
+      tokens[i] = malloc(sizeof(char) * (k + 1));
+      for (j = 0; buff[m] != ' ' && buff[m] != '\0'; j++, m++)
+	{
+	  tokens[i][j] == buff[m];
+	}
+      if (buff[m] != '\0')
+	m++;
+      tokens[i][j] == '\0';
+    }
+  tokens[i] = NULL;
+  return (tokens);
 }
