@@ -10,16 +10,9 @@ int main(int argc, char **argv, char **env)
 	size_t buffsize = 1;
 	char *buff;
 
-	buff = malloc(sizeof(char) * buffsize);
-	if (buff == NULL)
-	{
-		printf("Failed to malloc.\n");
-		return (1);
-	}
-
 	while (1)
 	{
-		cpid = fork();
+		cpid = fork()
 		if (cpid == -1)
 		{
 			printf("Fork failed");
@@ -27,17 +20,23 @@ int main(int argc, char **argv, char **env)
 		}
 		else if (cpid == 0)
 		{
-			printf("$ ");
-			getline(&buff, &buffsize, stdin);
-			buff[buffsize - 2] = '\0';
-			res = execve(buff, argv, env);
-			if (res == -1)
-				printf("%s: 1: %s does not exist\n", argv[0], buff);
-			break;
+		  buff = malloc(sizeof(char) * buffsize);
+		  if (buff == NULL)
+		    {
+		      printf("Failed to malloc.\n");
+		      return (1);
+		    }
+		  printf("$ ");
+		  getline(&buff, &buffsize, stdin);
+		  buff[buffsize - 2] = '\0';
+		  res = execve(buff, argv, env);
+		  if (res == -1)
+		    printf("%s: 1: %s does not exist\n", argv[0], buff);
+		  free(buff);
+		  break;
 		}
 		else
-			wait(NULL);
+		  wait(NULL);
 	}
-
 	return (0);
 }
