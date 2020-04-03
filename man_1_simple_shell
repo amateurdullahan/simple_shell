@@ -1,0 +1,18 @@
+.TH SIMPLE_SHELL 1 "2 APRIL 2020" "0.1" "Holberton Simple Shell"
+.SH NAME
+.B hsh
+- Holberton Simple Shell
+.B SYNOPSIS
+.B ./hsh
+[command] [options]
+.SH DESCRIPTION
+.B hsh
+(Holberton Simple Shell) is an end of semester group project at Holberton School were we build a simple shell
+.SH OPTIONS
+.b TBD
+.SH SEE ALSO
+.b TBD
+.SH BUGS
+.b TBD
+.SH AUTHOR
+Dylan Carey, Sean Taylor
