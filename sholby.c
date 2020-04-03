@@ -7,10 +7,10 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int i = 0, res, cpid;
+  int i = 0, res, cpid, cenv = 0;
 	size_t buffsize = 1;
-	char *buff, **sargs;
-	const char *s = " ";
+	char *buff, **sargs, *senv, *spath, *cat;
+	const char *s = " ", *t = ":";
 
 	while (1)
 	{
@@ -37,11 +37,27 @@ int main(int argc, char **argv, char **env)
 			sargs[0] = strtok(buff, s);
 			for (i = 0; sargs[i] != NULL; i++)
 				sargs[i + 1] = strtok(NULL, s);
-			res = execve(sargs[0], sargs, env);
+			for (cenv = 0; env[cenv][0] != 'P' || env[cenv][1] != 'A' || env[cenv][2] != 'T' || env[cenv][3] != 'H'; cenv++)
+			  ; 
+			strcpy(senv, (env[cenv] + 5));
+			printf("%s\n", senv);
+			spath = strtok(senv, s);
+			while (spath != NULL)
+			  {
+			    cat = strcat(spath, sargs[0]);
+			    printf("\nin the while \n%s\n", cat);
+			    res = stat(cat, NULL);
+			    if (res != -1)
+			      break;
+			    spath = strtok(NULL, t);
+			  }
+			printf("\n%s\n", cat);
+			res = execve(cat, sargs, env);
 			if (res == -1)
-				printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
+				printf("%s: 1: %s does not exist\n", argv[0], cat);
 			free(buff);
 			free(sargs);
+			free(cat);
 			break;
 		}
 		else
@@ -91,3 +107,4 @@ char **tokenize(char *buff)
   tokens[i] = NULL;
   return (tokens);
 }
+
