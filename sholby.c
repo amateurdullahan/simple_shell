@@ -32,30 +32,24 @@ int main(int argc, char **argv, char **env)
 			sargs[0] = strtok(buff, s);
 			for (i = 0; sargs[i] != NULL; i++)
 				sargs[i + 1] = strtok(NULL, s);
-			for (cenv = 0; env[cenv][0] != 'P' || env[cenv][1] != 'A' || env[cenv][2] != 'T' || env[cenv][3] != 'H'; cenv++)
-			  ;
+			while (env[cenv][0] != 'P' || env[cenv][1] != 'A' || env[cenv][2] != 'T' || env[cenv][3] != 'H')
+			  cenv++;
 			senv = malloc(sizeof(char) * (strlen(env[cenv] + 5) + 1));
 			strcpy(senv, (env[cenv] + 5));
 			spath = strtok(senv, t);
 			while (spath != NULL)
 			  {
-			    /*printf("\n%s + %s\n", spath, sargs[0]);*/
 			    cat = malloc(sizeof(char) * (strlen(spath) + 2));
 			    strcpy(cat, spath); 
 			    strcat(cat, "/");
-			    /* printf("\nstrcpy %s\n spath %s\n", cat, spath);*/
 			    strcat(cat, sargs[0]);
-			    /*printf("\nin the while \n%s\n", cat);*/
 			    res = execve(cat, sargs, env);
 			    if (res != -1)
 			      break;
-			    /*printf("\nspath %s\n", spath);*/
 			    spath = strtok(NULL, t);
-			    /*printf("\n%s\n", spath);*/
 			  }
-			/*printf("\n%s\n", spath);*/
 			if (res == -1)
-				printf("%s: 1: %s does not exist\n", argv[0], cat);
+			  printf("%s: 1: %s does not exist\n", argv[0], cat);
 			free(buff);
 			free(sargs);
 			break;
