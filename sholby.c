@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <string.h>
+#include "holberton.h"
 
 int main(int argc, char **argv, char **env)
 {
@@ -59,19 +54,21 @@ int main(int argc, char **argv, char **env)
 			    /*printf("\n%s\n", spath);*/
 			  }
 			/*printf("\n%s\n", spath);*/
-			res = execve(cat, sargs, env);
 			if (res == -1)
 				printf("%s: 1: %s does not exist\n", argv[0], cat);
 			free(buff);
 			free(sargs);
-
 			break;
 		}
 		else
 		{
 			wait(NULL);
-			/*if (isatty(res) != 1)
-			  return (0);*/
+			res = 0;
+			res = isatty(res);
+			if (res != 1)
+			  {
+			    return (0);
+			  }
 		}
 	}
 	return (0);
