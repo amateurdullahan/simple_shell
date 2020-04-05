@@ -32,7 +32,7 @@ int main(int argc, char **argv, char **env)
 			sargs[0] = strtok(buff, s);
 			for (i = 0; sargs[i] != NULL; i++)
 				sargs[i + 1] = strtok(NULL, s);
-			while (env[cenv][0] != 'P' || env[cenv][1] != 'A' || env[cenv][2] != 'T' || env[cenv][3] != 'H')
+			while (strncmp(env[cenv], "PATH", 4))
 			  cenv++;
 			senv = malloc(sizeof(char) * (strlen(env[cenv] + 5) + 1));
 			strcpy(senv, (env[cenv] + 5));
