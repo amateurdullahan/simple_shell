@@ -39,6 +39,14 @@ char *_strcpy(char **dest, char *src)
   return (*dest);
 }
 
+/**
+ * _strcmp - compares two strings
+ * @s1: first string
+ * @s2: second string
+ *
+ * Return: 0 if same OR -1 if different
+ */
+
 int _strcmp(char *s1, char *s2)
 {
   int c;
@@ -51,6 +59,15 @@ int _strcmp(char *s1, char *s2)
    }
  return (0);
 }
+
+/**
+ * _strncmp - comapres two string to the nth character
+ * @s1: first string
+ * @s2: second string
+ * @n: number of characters to compare
+ * 
+ * Return: 0 if same or -1 if different
+ */
 
 int _strncmp(char *s1, char *s2, int n)
 {
@@ -65,23 +82,24 @@ int _strncmp(char *s1, char *s2, int n)
   return (0);
 }
 
+/**
+ * _strcat - appends src string to dest string
+ * @dest: string being appened
+ * @src: string to be appended to dest
+ *
+ * Return: appended dest string
+ */
 
-
-
-
-
-int main(void)
+char *_strcat(char *dest, char *src)
 {
-  char *a;
-  char *b = "foopopgizu";  
-
-int c = _strlen("Holberton");
-
-
-  printf("%d\n", c);
-  c = _strlen(NULL);
-  printf("%d\n", c);
-  _strcpy(&a, b);
-  printf("dest:%s\nsrc:%s\n", a, b);
-  return(0);
+  int c;
+  int d;
+  for (c = 0; dest[c]; c++)
+    ;
+  for (d = 0; src[d] != '\0'; d++, c++)
+    {
+      dest[c] = src[d];
+    }
+  dest[c] = '\0';
+  return (dest);
 }
