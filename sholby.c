@@ -66,7 +66,7 @@ int cmdcall(char **argv, char **env)
 		spath = strtok(NULL, t);
 	}
 	if (res == -1)
-		printf("%s: 1: %s does not exist\n", argv[0], cat);
+		printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
 	free(buff);
 	free(sargs);
 	return (res);
