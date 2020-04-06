@@ -12,7 +12,8 @@
 
 char **tokenize(char *buff);
 int cmdcall(char **argv, char **env);
-
-
+char *_strcpy(char **dest, char *src);
+int _strcmp(char *s1, char *s2);
+int _strncmp(char *s1, char *s2, int n);
 
 #endif /* HOLBERTON_H */
