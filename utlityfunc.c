@@ -27,16 +27,15 @@ return (count);
  * Return: pointer to dest
  */
 
-char *_strcpy(char **dest, char *src)
+char *_strcpy(char *dest, char *src)
 {
   int c;
-  *dest = malloc(sizeof(char) * (_strlen(src) + 1));
   for (c = 0; src[c]; c++)
     {
-      (*dest)[c] = src[c];
+      dest[c] = src[c];
     }
-  (*dest)[c] = '\0';
-  return (*dest);
+  dest[c] = '\0';
+  return (dest);
 }
 
 /**

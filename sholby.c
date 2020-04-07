@@ -51,15 +51,15 @@ int cmdcall(char **argv, char **env)
 		sargs[i + 1] = strtok(NULL, s);
 	while (strncmp(env[cenv], "PATH", 4))
 		cenv++;
-	senv = malloc(sizeof(char) * (strlen(env[cenv] + 5) + 1));
-	strcpy(senv, (env[cenv] + 5));
+	senv = malloc(sizeof(char) * (_strlen(env[cenv] + 5) + 1));
+	_strcpy(senv, (env[cenv] + 5));
 	spath = strtok(senv, t);
 	while (spath != NULL)
 	{
-		cat = malloc(sizeof(char) * (strlen(spath) + 2));
-		strcpy(cat, spath);
-		strcat(cat, "/");
-		strcat(cat, sargs[0]);
+		cat = malloc(sizeof(char) * (_strlen(spath) + 2));
+		_strcpy(cat, spath);
+		_strcat(cat, "/");
+		_strcat(cat, sargs[0]);
 		res = execve(cat, sargs, env);
 		if (res != -1)
 			break;
