@@ -2,7 +2,8 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int res, cpid;
+	int res, cpid, chstat = 0;
+	char *p = malloc(sizeof(char) * 2);
 
 	while (1)
 	{
@@ -14,14 +15,13 @@ int main(int argc, char **argv, char **env)
 		}
 		else if (cpid == 0)
 		{
-			res = cmdcall(argv, env);
+			cmdcall(argv, env);
 		}
 		else
 		{
-			wait(NULL);
-			res = 0;
-			res = isatty(res);
-			if (res != 1)
+			wait(&chstat);
+			res = isatty(STDIN_FILENO);
+			if (!(res))
 				return (0);
 		}
 	}
@@ -36,12 +36,11 @@ int cmdcall(char **argv, char **env)
 	char **sargs, *senv, *spath, *cat, *buff = malloc(sizeof(char) * buffsize);
 
 	if (buff == NULL)
-	{
-		printf("Failed to malloc.\n");
 		return (1);
-	}
 	printf("$ ");
-	getline(&buff, &buffsize, stdin);
+	res = getline(&buff, &buffsize, stdin);
+	if (res == -1)
+		exit(2);
 	while (buff[i] != '\n' && buff[i] != '\0')
 		i++;
 	buff[i] = '\0';
