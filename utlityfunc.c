@@ -70,15 +70,16 @@ int _strcmp(char *s1, char *s2)
 
 int _strncmp(char *s1, char *s2, int n)
 {
-  int c;
-  for (c = 0; c < n || s1[c] != '\0' || s2[c] != '\0'; c++)
+  int c, r = 0;
+  for (c = 0; c < n && s1[c] != '\0' && s2[c] != '\0'; c++)
     {
       if (s1[c] != s2[c])
 	{
-	  return (-1);
+	  r = (s1[c] - s2[c]);
+	  return (r);
 	}
     }
-  return (0);
+  return (r);
 }
 
 /**

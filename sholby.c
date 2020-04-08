@@ -49,7 +49,7 @@ int cmdcall(char **argv, char **env)
 	sargs[0] = strtok(buff, s);
 	for (i = 0; sargs[i] != NULL; i++)
 		sargs[i + 1] = strtok(NULL, s);
-	while (strncmp(env[cenv], "PATH", 4))
+	while (_strncmp(env[cenv], "PATH", 4))
 		cenv++;
 	senv = malloc(sizeof(char) * (_strlen(env[cenv] + 5) + 1));
 	_strcpy(senv, (env[cenv] + 5));
