@@ -2,15 +2,18 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int i = 0, res, cpid = -1;
-	size_t buffsize = 1;
-	char *cmd, **sargs, *buff = malloc(sizeof(char) * buffsize);
+	int i, res, cpid = -1;
+	size_t buffsize;
+	char *cmd, **sargs, *buff;
 
 	while (1)
 	{
+		buffsize = 1;
+		buff = malloc(sizeof(char) * buffsize);
 		if (buff == NULL)
 			return (1);
-		printf("$ ");
+		if (isatty(STDIN_FILENO))
+			printf("$ ");
 		res = getline(&buff, &buffsize, stdin);
 		if (res == -1)
 		{
@@ -19,8 +22,8 @@ int main(int argc, char **argv, char **env)
 		}
 		if (!(_strncmp(buff, "exit", 4)))
 			return (0);
-		while (buff[i] != '\n' && buff[i] != '\0')
-			i++;
+		for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
+			;
 		buff[i] = '\0';
 
 		sargs = getsargs(buff);
@@ -30,6 +33,7 @@ int main(int argc, char **argv, char **env)
 		chexe(cmd, sargs, env);
 
 		wait(NULL);
+		free(buff);
 		if (!(isatty(STDIN_FILENO)))
 			return (0);
 	}
@@ -80,7 +84,7 @@ char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 	spath = strtok(senv, t);
 	while (spath != NULL)
 	{
-		cat = malloc(sizeof(char) * (_strlen(spath) + 2));
+		cat = malloc(sizeof(char) * (_strlen(spath) + _strlen(sargs[0]) + 2));
 		_strcpy(cat, spath);
 		_strcat(cat, "/");
 		_strcat(cat, sargs[0]);
@@ -95,7 +99,6 @@ char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 		printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
 		cat = NULL;
 	}
-	free(buff);
 	free(ststr);
 	return (cat);
 }
