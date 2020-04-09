@@ -2,53 +2,77 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int res, cpid;
+	int i = 0, res, cpid = -1;
+	size_t buffsize = 1;
+	char *cmd, **sargs, *buff = malloc(sizeof(char) * buffsize);
 
 	while (1)
 	{
-		cpid = fork();
-		if (cpid == -1)
+		if (buff == NULL)
+			return (1);
+		printf("$ ");
+		res = getline(&buff, &buffsize, stdin);
+		if (res == -1)
 		{
-			printf("Fork failed");
+			printf("\n");
 			return (1);
 		}
-		else if (cpid == 0)
-		{
-			res = cmdcall(argv, env);
-		}
-		else
-		{
-			wait(NULL);
-			res = 0;
-			res = isatty(res);
-			if (res != 1)
-				return (0);
-		}
+		if (!(_strncmp(buff, "exit", 4)))
+			return (0);
+		while (buff[i] != '\n' && buff[i] != '\0')
+			i++;
+		buff[i] = '\0';
+
+		sargs = getsargs(buff);
+
+		cmd = cmdcall(argv, env, buff, sargs);
+
+		chexe(cmd, sargs, env);
+
+		wait(NULL);
+		if (!(isatty(STDIN_FILENO)))
+			return (0);
 	}
 	return (0);
 }
 
-int cmdcall(char **argv, char **env)
+void chexe(char *cmd, char **sargs, char **env)
 {
-	size_t buffsize = 1;
-	int i = 0, cenv = 0, res;
-	const char *s = " ", *t = ":";
-	char **sargs, *senv, *spath, *cat, *buff = malloc(sizeof(char) * buffsize);
+	int cpid;
 
-	if (buff == NULL)
+	cpid = fork();
+	if (cpid == -1)
 	{
-		printf("Failed to malloc.\n");
-		return (1);
+		printf("Fork failed");
+		return;
 	}
-	printf("$ ");
-	getline(&buff, &buffsize, stdin);
-	while (buff[i] != '\n' && buff[i] != '\0')
-		i++;
-	buff[i] = '\0';
+	else if (cpid == 0)
+	{
+		execve(cmd, sargs, env);
+		return;
+	}
+}
+
+char **getsargs(char *buff)
+{
+	int i;
+	char **sargs;
+	const char *s = " ";
+
 	sargs = malloc(sizeof(char *) * 100);
 	sargs[0] = strtok(buff, s);
 	for (i = 0; sargs[i] != NULL; i++)
 		sargs[i + 1] = strtok(NULL, s);
+	return (sargs);
+}
+
+char *cmdcall(char **argv, char **env, char *buff, char **sargs)
+{
+	struct stat *ststr = malloc(sizeof(struct stat *));
+	int cenv = 0, res;
+	const char *t = ":";
+	char *senv, *spath, *cat;
+
 	while (_strncmp(env[cenv], "PATH", 4))
 		cenv++;
 	senv = malloc(sizeof(char) * (_strlen(env[cenv] + 5) + 1));
@@ -60,16 +84,20 @@ int cmdcall(char **argv, char **env)
 		_strcpy(cat, spath);
 		_strcat(cat, "/");
 		_strcat(cat, sargs[0]);
-		res = execve(cat, sargs, env);
-		if (res != -1)
+		res = stat(cat, ststr);
+		if (res == 0)
 			break;
 		spath = strtok(NULL, t);
+		free(cat);
 	}
 	if (res == -1)
+	{
 		printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
+		cat = NULL;
+	}
 	free(buff);
-	free(sargs);
-	return (res);
+	free(ststr);
+	return (cat);
 }
 
 char **tokenize(char *buff)

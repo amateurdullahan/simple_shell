@@ -11,10 +11,12 @@
 
 
 char **tokenize(char *buff);
-int cmdcall(char **argv, char **env);
+char *cmdcall(char **argv, char **env, char *buff, char **sargs);
+char **getsargs(char *buff);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int _strncmp(char *s1, char *s2, int n);
 char *_strcat(char *dest, char *src);
+void chexe(char *cmd, char **sargs, char **env);
 
 #endif /* HOLBERTON_H */
