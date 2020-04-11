@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
 
@@ -17,6 +18,6 @@ char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int _strncmp(char *s1, char *s2, int n);
 char *_strcat(char *dest, char *src);
-void chexe(char *cmd, char **sargs, char **env);
+int chexe(char *cmd, char **sargs, char **env);
 
 #endif /* HOLBERTON_H */
