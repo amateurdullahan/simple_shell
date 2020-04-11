@@ -19,5 +19,8 @@ int _strcmp(char *s1, char *s2);
 int _strncmp(char *s1, char *s2, int n);
 char *_strcat(char *dest, char *src);
 int chexe(char *cmd, char **sargs, char **env);
+void exitbltin(char *buff);
+void envbltin(char *buff, char **env);
+char *prepbuff();
 
 #endif /* HOLBERTON_H */

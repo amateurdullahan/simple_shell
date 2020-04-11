@@ -3,33 +3,18 @@
 int main(int argc, char **argv, char **env)
 {
 	int i, res, cpid = -1;
-	size_t buffsize;
 	char *cmd, **sargs, *buff;
 
 	while (1)
 	{
-		buffsize = 1024;
-		buff = malloc(sizeof(char) * buffsize);
-		if (buff == NULL)
-			return (1);
-		if (isatty(STDIN_FILENO))
-			printf("$ ");
-		res = getline(&buff, &buffsize, stdin);
-		if (res == -1)
+		buff = prepbuff();
+		if (!(_strcmp(buff, "exit")))
+			exitbltin(buff);
+		else if (!(_strcmp(buff, "env")))
 		{
-			free(buff);
-			printf("\n");
-			return (1);
+			envbltin(buff, env);
+			continue;
 		}
-		if (!(_strncmp(buff, "exit", 4)))
-		{
-			free(buff);
-			return (0);
-		}
-		for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
-			;
-		buff[i] = '\0';
-
 		sargs = getsargs(buff);
 		if (sargs == NULL)
 		{
@@ -50,6 +35,30 @@ int main(int argc, char **argv, char **env)
 			return (0);
 	}
 	return (0);
+}
+
+char *prepbuff()
+{
+	int i, res;
+	size_t buffsize = 1024;
+	char *buff = malloc(sizeof(char) * buffsize);
+
+	if (buff == NULL)
+		exit(1);
+	if (isatty(STDIN_FILENO))
+		printf("$ ");
+	res = getline(&buff, &buffsize, stdin);
+	if (res == -1)
+	{
+		free(buff);
+		printf("\n");
+		exit(1);
+	}
+	for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
+		;
+	buff[i] = '\0';
+
+	return (buff);
 }
 
 int chexe(char *cmd, char **sargs, char **env)
@@ -123,35 +132,3 @@ char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 	free(senv);
 	return (cat);
 }
-
-char **tokenize(char *buff)
-{
-	int i, j, k, l = 0, m = 0, tkount = 0;
-	char **tokens;
-
-	for (i = 0; buff[i]; i++)
-	{
-		if (buff[i] == ' ' || buff[i] == '\0')
-			tkount++;
-	}
-	tokens = malloc(sizeof(char *) * (tkount + 1));
-
-	for (i = 0; i < tkount; i++)
-	{
-		k = 0;
-		while (buff[k + l] != ' ' && buff[k + l] != '\0')
-		k++;
-		l += k;
-		if (buff[l] != '\0')
-			l++;
-		tokens[i] = malloc(sizeof(char) * (k + 1));
-		for (j = 0; buff[m] != ' ' && buff[m] != '\0'; j++, m++)
-			tokens[i][j] == buff[m];
-		if (buff[m] != '\0')
-			m++;
-		tokens[i][j] == '\0';
-	}
-	tokens[i] = NULL;
-	return (tokens);
-}
-
