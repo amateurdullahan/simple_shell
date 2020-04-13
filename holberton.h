@@ -34,6 +34,6 @@ char *_reverse(char *buffer, int i, int j);
 void _swap(char *x, char *y);
 int print_conv(const char *str, va_list arg);
 int print_s(const char *str, va_list arg);
-
+int errorputchar(char c);
 
 #endif /* HOLBERTON_H */
