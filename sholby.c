@@ -1,5 +1,14 @@
 #include "holberton.h"
 
+/**
+ * main - run basic loop of shell
+ * @argc: arguemnt count
+ * @argv: dbl pointer of arguments
+ * @env: dbl pointer of enviroment variables
+ *
+ * Return: 0 if successful OR 1 if failure
+ */
+
 int main(int argc, char **argv, char **env)
 {
 	int i, res, cpid = -1;
@@ -37,6 +46,12 @@ int main(int argc, char **argv, char **env)
 	return (0);
 }
 
+/**
+ * prepbuff - prep the buff for shell
+ *
+ * Return: buff that is prepped for shell
+ */
+
 char *prepbuff()
 {
 	int i, res;
@@ -61,6 +76,15 @@ char *prepbuff()
 	return (buff);
 }
 
+/**
+ * chexe - fork the child and execute the command
+ * @cmd: command to be executed
+ * @sargs: dbl pointer containing arguments for command
+ * @env: dbl pointer containing enviromental variables
+ *
+ * Return: 0 if successful OR -1 if failure
+ */
+
 int chexe(char *cmd, char **sargs, char **env)
 {
 	int cpid;
@@ -78,6 +102,13 @@ int chexe(char *cmd, char **sargs, char **env)
 	}
 }
 
+/**
+ * getsargs - get shell arguments
+ * @buff: pointer containing arguments to be parsed
+ *
+ * Return: dbl pointer containing tokenized arguments
+ */
+
 char **getsargs(char *buff)
 {
 	int i;
@@ -92,6 +123,16 @@ char **getsargs(char *buff)
 		sargs[i + 1] = strtok(NULL, s);
 	return (sargs);
 }
+
+/**
+ * cmdcall - get command to be executed
+ * @argv: dbl pointer containing array of arguments
+ * @env: dbl pointer containing enviromental variables
+ * @buff: pointer containing buff of stdin
+ * @sargs: dbl pointer containing tokenized shell arguments
+ *
+ * Return: concatenated pointer containing working command and arguements
+ */
 
 char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 {

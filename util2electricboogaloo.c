@@ -1,5 +1,12 @@
 #include "holberton.h"
 
+/**
+ * tokenize - parse buff into tokens
+ * @buff: pointer to be tokenized
+ *
+ * Return: pointer to array of tokens
+ */
+
 char **tokenize(char *buff)
 {
 	int i, j, k, l = 0, m = 0, tkount = 0;
