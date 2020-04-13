@@ -126,8 +126,19 @@ char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 	}
 	if (res == -1)
 	{
-		printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
-		cat = NULL;
+		cat = malloc(sizeof(char) * 1024);
+		if (!(strncmp(sargs[0], "./", 2)))
+		{
+			getcwd(cat, 1024);
+			_strcat(cat, argv[0] + 1);
+		}
+		/*else if (!(strncmp(sargs[0], "../", 3))
+		*/res = stat(cat, &ststr);
+		if (res == -1)
+		{
+			printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
+			cat = NULL;
+		}
 	}
 	free(senv);
 	return (cat);
