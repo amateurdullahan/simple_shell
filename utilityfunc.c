@@ -43,7 +43,7 @@ char *_strcpy(char *dest, char *src)
  * @s1: first string
  * @s2: second string
  *
- * Return: 0 if same OR -1 if different
+ * Return: 0 if same OR ascii value if different
  */
 
 int _strcmp(char *s1, char *s2)
@@ -66,7 +66,7 @@ int _strcmp(char *s1, char *s2)
  * @s2: second string
  * @n: number of characters to compare
  * 
- * Return: 0 if same or -1 if different
+ * Return: 0 if same or ascii value difference if different
  */
 
 int _strncmp(char *s1, char *s2, int n)
