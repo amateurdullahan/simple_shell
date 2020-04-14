@@ -17,9 +17,11 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		buff = prepbuff();
-		if (!(_strcmp(buff, "exit")))
+		if (buff[0] == '\0')
+			continue;
+		else if (!(_strcmp(buff, "exit")) && _strlen(buff) > 3)
 			exitbltin(buff);
-		else if (!(_strcmp(buff, "env")))
+		else if (!(_strcmp(buff, "env")) && _strlen(buff) > 2)
 		{
 			envbltin(buff, env);
 			continue;
@@ -40,8 +42,6 @@ int main(int argc, char **argv, char **env)
 
 		free(sargs);
 		free(buff);
-		if (!(isatty(STDIN_FILENO)))
-			return (0);
 	}
 	return (0);
 }
@@ -66,13 +66,14 @@ char *prepbuff()
 	if (res == -1)
 	{
 		free(buff);
-		printf("\n");
+		if (isatty(STDIN_FILENO))
+			printf("\n");
 		exit(1);
 	}
 	for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
 		;
 	buff[i] = '\0';
-
+	buff = trimbuff(buff);
 	return (buff);
 }
 
@@ -137,7 +138,7 @@ char **getsargs(char *buff)
 char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 {
 	struct stat ststr;
-	int cenv = 0, res;
+	int cenv = 0, res = -1;
 	const char *t = ":";
 	char *senv, *spath, *cat;
 
@@ -168,16 +169,16 @@ char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 	if (res == -1)
 	{
 		cat = malloc(sizeof(char) * 1024);
-		if (!(strncmp(sargs[0], "./", 2)))
-		{
-			getcwd(cat, 1024);
-			_strcat(cat, argv[0] + 1);
-		}
-		/*else if (!(strncmp(sargs[0], "../", 3))
-		*/res = stat(cat, &ststr);
+		cat[0] = '\0';
+		if (!(strncmp(sargs[0], "./", 2)) || !(strncmp(sargs[0], "../", 3)))
+			pthexp(sargs[0], cat);
+		else if (!(strncmp(sargs[0], "/", 1)))
+			_strcpy(cat, sargs[0]);
+		res = stat(cat, &ststr);
 		if (res == -1)
 		{
 			printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
+			free(cat);
 			cat = NULL;
 		}
 	}
