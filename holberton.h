@@ -12,7 +12,7 @@
 
 
 char **tokenize(char *buff);
-char *cmdcall(char **argv, char **env, char *buff, char **sargs);
+char *cmdcall(char **argv, char **env, char **sargs);
 char **getsargs(char *buff);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
@@ -24,5 +24,6 @@ void envbltin(char *buff, char **env);
 char *prepbuff();
 void pthexp(char *rel, char *dest);
 char *trimbuff(char *buff);
+int _strlen(char *str);
 
 #endif /* HOLBERTON_H */

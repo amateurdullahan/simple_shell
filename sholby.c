@@ -11,10 +11,9 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int i, res, cpid = -1;
 	char *cmd, **sargs, *buff;
 
-	while (1)
+	while (argc)
 	{
 		buff = prepbuff();
 		if (buff[0] == '\0')
@@ -32,7 +31,7 @@ int main(int argc, char **argv, char **env)
 			free(buff);
 			return (1);
 		}
-		cmd = cmdcall(argv, env, buff, sargs);
+		cmd = cmdcall(argv, env, sargs);
 		if (cmd != NULL)
 		{
 			chexe(cmd, sargs, env);
@@ -92,15 +91,11 @@ int chexe(char *cmd, char **sargs, char **env)
 
 	cpid = fork();
 	if (cpid == -1)
-	{
 		printf("Fork failed");
-		return (-1);
-	}
 	else if (cpid == 0)
-	{
 		execve(cmd, sargs, env);
-		return (0);
-	}
+
+	return (cpid);
 }
 
 /**
@@ -135,7 +130,7 @@ char **getsargs(char *buff)
  * Return: concatenated pointer containing working command and arguements
  */
 
-char *cmdcall(char **argv, char **env, char *buff, char **sargs)
+char *cmdcall(char **argv, char **env, char **sargs)
 {
 	struct stat ststr;
 	int cenv = 0, res = -1;

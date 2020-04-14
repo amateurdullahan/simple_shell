@@ -29,10 +29,10 @@ char **tokenize(char *buff)
 			l++;
 		tokens[i] = malloc(sizeof(char) * (k + 1));
 		for (j = 0; buff[m] != ' ' && buff[m] != '\0'; j++, m++)
-			tokens[i][j] == buff[m];
+			tokens[i][j] = buff[m];
 		if (buff[m] != '\0')
 			m++;
-		tokens[i][j] == '\0';
+		tokens[i][j] = '\0';
 	}
 	tokens[i] = NULL;
 	return (tokens);
