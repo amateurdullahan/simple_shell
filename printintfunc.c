@@ -11,27 +11,27 @@
 
 char *_itoa(int value, char *buffer, int base)
 {
-  int i = 0;
-  int n = _abs(value);
-  int r;
+	int i = 0;
+	int n = _abs(value);
+	int r;
 
-  if (base < 2 || base > 32)
-    return (buffer);
-  while (n)
-    {
-      r = n % base;
-      if (r >= 10)
-	buffer[i++] = 65 + (r - 10);
-      else
-	buffer[i++] = 48 + r;
-      n = n / base;
-    }
-  if (i == 0)
-    buffer[i++] = '0';
-  if (value < 0 && base == 10)
-    buffer[i++] = '-';
-  buffer[i] = '\0';
-  return (_reverse(buffer, 0, i - 1));
+	if (base < 2 || base > 32)
+		return (buffer);
+	while (n)
+	{
+		r = n % base;
+		if (r >= 10)
+			buffer[i++] = 65 + (r - 10);
+		else
+			buffer[i++] = 48 + r;
+		n = n / base;
+	}
+	if (i == 0)
+		buffer[i++] = '0';
+	if (value < 0 && base == 10)
+		buffer[i++] = '-';
+	buffer[i] = '\0';
+	return (_reverse(buffer, 0, i - 1));
 }
 
 /**
@@ -43,10 +43,10 @@ char *_itoa(int value, char *buffer, int base)
 
 int _abs(int a)
 {
-  if (a >= 0)
-    return (a);
-  else
-    return (a - (a * 2));
+	if (a >= 0)
+		return (a);
+	else
+		return (a - (a * 2));
 }
 
 /**
@@ -60,9 +60,9 @@ int _abs(int a)
 
 char *_reverse(char *buffer, int i, int j)
 {
-  while (i < j)
-    _swap(&buffer[i++], &buffer[j--]);
-  return (buffer);
+	while (i < j)
+		_swap(&buffer[i++], &buffer[j--]);
+	return (buffer);
 }
 
 /**
@@ -75,7 +75,8 @@ char *_reverse(char *buffer, int i, int j)
 
 void _swap(char *x, char *y)
 {
-  char t= *x;
-  *x = *y;
-  *y = t;
+	char t = *x;
+
+	*x = *y;
+	*y = t;
 }

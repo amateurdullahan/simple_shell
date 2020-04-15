@@ -68,7 +68,7 @@ int _strcmp(char *s1, char *s2)
  * @s1: first string
  * @s2: second string
  * @n: number of characters to compare
- * 
+ *
  * Return: 0 if same or ascii value difference if different
  */
 
