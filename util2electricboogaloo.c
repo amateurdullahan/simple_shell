@@ -112,7 +112,7 @@ char *trimbuff(char *buff)
 char *afterpath(char **sargs, char **argv, int line)
 {
 	struct stat ststr;
-	char *cat;
+	char *cat, *tmp, *tmp2;
 	int res;
 
 	cat = malloc(sizeof(char) * 1024);
@@ -124,8 +124,17 @@ char *afterpath(char **sargs, char **argv, int line)
 	res = stat(cat, &ststr);
 	if (res == -1)
 	{
-		_printf(STDERR_FILENO, "%s: %d: %s: not found\n", argv[0], line, sargs[0]);
-		free(cat);
+		tmp2 = malloc(1024);
+		_itoa(line, tmp2, 10);
+		tmp = malloc(sizeof(char) *
+			(_strlen(argv[0]) + _strlen(sargs[0]) + _strlen(tmp2) + 5));
+		_strcpy(tmp, argv[0]);
+		_strcat(tmp, ": ");
+		_strcat(tmp, tmp2);
+		_strcat(tmp, ": ");
+		_strcat(tmp, sargs[0]);
+		perror(tmp);
+		free(cat), free(tmp), free(tmp2);
 		cat = NULL;
 	}
 
