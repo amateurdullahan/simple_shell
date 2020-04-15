@@ -12,7 +12,7 @@
 
 
 char **tokenize(char *buff);
-char *cmdcall(char **argv, char **env, char **sargs);
+char *cmdcall(char **argv, char **env, char **sargs, int line);
 char **getsargs(char *buff);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);

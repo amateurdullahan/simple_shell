@@ -11,10 +11,12 @@
 
 int main(int argc, char **argv, char **env)
 {
+	int line = 0;
 	char *cmd, **sargs, *buff;
 
 	while (argc)
 	{
+		line++;
 		buff = prepbuff();
 		if (buff[0] == '\0')
 			continue;
@@ -31,7 +33,7 @@ int main(int argc, char **argv, char **env)
 			free(buff);
 			return (1);
 		}
-		cmd = cmdcall(argv, env, sargs);
+		cmd = cmdcall(argv, env, sargs, line);
 		if (cmd != NULL)
 		{
 			chexe(cmd, sargs, env);
@@ -130,7 +132,7 @@ char **getsargs(char *buff)
  * Return: concatenated pointer containing working command and arguements
  */
 
-char *cmdcall(char **argv, char **env, char **sargs)
+char *cmdcall(char **argv, char **env, char **sargs, int line)
 {
 	struct stat ststr;
 	int cenv = 0, res = -1;
@@ -172,7 +174,7 @@ char *cmdcall(char **argv, char **env, char **sargs)
 		res = stat(cat, &ststr);
 		if (res == -1)
 		{
-			printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
+			printf("%s: %d: %s: not found\n", argv[0], line, sargs[0]);
 			free(cat);
 			cat = NULL;
 		}
