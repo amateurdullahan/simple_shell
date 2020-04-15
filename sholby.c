@@ -145,7 +145,10 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 	if (senv == NULL)
 		return (NULL);
 	_strcpy(senv, (env[cenv] + 5));
-	spath = strtok(senv, t);
+	if (senv[0] == ':')
+		spath = "";
+	else
+		spath = strtok(senv, t);
 	while (spath != NULL)
 	{
 		cat = malloc(sizeof(char) * (_strlen(spath) + _strlen(sargs[0]) + 2));
@@ -155,7 +158,8 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 			return (NULL);
 		}
 		_strcpy(cat, spath);
-		_strcat(cat, "/");
+		if (spath[0] != '\0')
+			_strcat(cat, "/");
 		_strcat(cat, sargs[0]);
 		res = stat(cat, &ststr);
 		if (res == 0)
