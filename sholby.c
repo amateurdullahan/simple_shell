@@ -108,8 +108,7 @@ int chexe(char *cmd, char **sargs, char **env)
 	}
 	else if (cpid == 0)
 	{
-		execve(cmd, sargs, env);
-		printf("we no die");
+		res = execve(cmd, sargs, env);
 		exit(res);
 	}
 
