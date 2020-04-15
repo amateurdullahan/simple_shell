@@ -112,7 +112,7 @@ char *trimbuff(char *buff)
 char *afterpath(char **sargs, char **argv, int line)
 {
 	struct stat ststr;
-	char *cat, *tmp, *tmp2;
+	char *cat;
 	int res;
 
 	cat = malloc(sizeof(char) * 1024);

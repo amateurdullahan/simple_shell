@@ -10,13 +10,11 @@
  */
 
 int main(int argc, char **argv, char **env)
-{
-	int err = 0, line = 0, res, stat;
+{int err = 0, line = 0, stat;
 	char *cmd, **sargs, *buff;
 
 	while (argc)
-	{
-		line++;
+	{line++;
 		buff = prepbuff();
 		if (buff == NULL)
 			break;
@@ -25,27 +23,23 @@ int main(int argc, char **argv, char **env)
 		else if (!(_strcmp(buff, "exit")) && _strlen(buff) > 3)
 			exitbltin(buff);
 		else if (!(_strcmp(buff, "env")) && _strlen(buff) > 2)
-		{
-			envbltin(buff, env);
+		{envbltin(buff, env);
 			continue;
 		}
 		sargs = getsargs(buff);
 		if (sargs == NULL)
-		{
-			free(buff);
+		{free(buff);
 			return (1);
 		}
 		cmd = cmdcall(argv, env, sargs, line);
 		if (cmd != NULL)
 		{
 			if (errno != 13)
-			{
-				res = chexe(cmd, sargs, env);
+			{chexe(cmd, sargs, env);
 				wait(&stat);
 			}
 			else
-			{
-				err = 126;
+			{err = 126;
 				prerr(argv, sargs, line);
 			}
 			free(cmd);
