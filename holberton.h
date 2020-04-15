@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
-
+#include <stdarg.h>
 
 
 char **tokenize(char *buff);
@@ -25,5 +25,18 @@ char *prepbuff();
 void pthexp(char *rel, char *dest);
 char *trimbuff(char *buff);
 int _strlen(char *str);
+
+/* PRINTF FUNCTIONS */
+
+int _printf(const char *format, ...);
+void _puts(char *str);
+int _putchar(char c);
+char *_itoa(int value, char *buffer, int base);
+int _abs(int a);
+char *_reverse(char *buffer, int i, int j);
+void _swap(char *x, char *y);
+int print_conv(const char *str, va_list arg);
+int print_s(const char *str, va_list arg);
+int errorputchar(char c);
 
 #endif /* HOLBERTON_H */
