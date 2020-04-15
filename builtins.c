@@ -26,7 +26,7 @@ void envbltin(char *buff, char **env)
 	int i;
 
 	for (i = 0; env[i] != NULL; i++)
-		printf("%s\n", env[i]);
+		_printf(STDOUT_FILENO, "%s\n", env[i]);
 
 	free(buff);
 }

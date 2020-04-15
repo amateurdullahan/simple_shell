@@ -12,7 +12,7 @@
 
 
 char **tokenize(char *buff);
-char *cmdcall(char **argv, char **env, char **sargs);
+char *cmdcall(char **argv, char **env, char **sargs, int line);
 char **getsargs(char *buff);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
@@ -28,15 +28,14 @@ int _strlen(char *str);
 
 /* PRINTF FUNCTIONS */
 
-int _printf(const char *format, ...);
-void _puts(char *str);
-int _putchar(char c);
+int _printf(int fd, const char *format, ...);
+void _puts(int fd, char *str);
+int _putchar(int fd, char c);
 char *_itoa(int value, char *buffer, int base);
 int _abs(int a);
 char *_reverse(char *buffer, int i, int j);
 void _swap(char *x, char *y);
-int print_conv(const char *str, va_list arg);
-int print_s(const char *str, va_list arg);
-int errorputchar(char c);
+int print_conv(int fd, const char *str, va_list arg);
+int print_s(int fd, va_list arg);
 
 #endif /* HOLBERTON_H */
