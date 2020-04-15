@@ -100,3 +100,34 @@ char *trimbuff(char *buff)
 	free(buff);
 	return (newbuff);
 }
+
+/**
+ * afterpath - checks non-path files
+ * @sargs: shell args
+ * @argv: args
+ * @line: line count
+ *
+ * Return: pointer to new path
+ */
+char *afterpath(char **sargs, char **argv, int line)
+{
+	struct stat ststr;
+	char *cat;
+	int res;
+
+	cat = malloc(sizeof(char) * 1024);
+	cat[0] = '\0';
+	if (!(strncmp(sargs[0], "./", 2)) || !(strncmp(sargs[0], "../", 3)))
+		pthexp(sargs[0], cat);
+	else if (!(strncmp(sargs[0], "/", 1)))
+		_strcpy(cat, sargs[0]);
+	res = stat(cat, &ststr);
+	if (res == -1)
+	{
+		_printf(STDERR_FILENO, "%s: %d: %s: not found\n", argv[0], line, sargs[0]);
+		free(cat);
+		cat = NULL;
+	}
+
+	return (cat);
+}

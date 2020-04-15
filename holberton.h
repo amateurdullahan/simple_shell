@@ -25,6 +25,7 @@ char *prepbuff();
 void pthexp(char *rel, char *dest);
 char *trimbuff(char *buff);
 int _strlen(char *str);
+char *afterpath(char **sargs, char **argv, int line);
 
 /* PRINTF FUNCTIONS */
 

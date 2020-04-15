@@ -13,6 +13,7 @@ int main(int argc, char **argv, char **env)
 {
 	int err = 0, line = 0, res, stat;
 	char *cmd, **sargs, *buff;
+
 	while (argc)
 	{
 		line++;
@@ -32,8 +33,7 @@ int main(int argc, char **argv, char **env)
 		if (sargs == NULL)
 		{
 			free(buff);
-			err = 1;
-			break;
+			return (1);
 		}
 		cmd = cmdcall(argv, env, sargs, line);
 		if (cmd != NULL)
@@ -48,8 +48,7 @@ int main(int argc, char **argv, char **env)
 		}
 		else
 			err = 127;
-		free(sargs);
-		free(buff);
+		free(sargs), free(buff);
 	}
 	return (err);
 }
@@ -148,7 +147,7 @@ char **getsargs(char *buff)
 char *cmdcall(char **argv, char **env, char **sargs, int line)
 {
 	struct stat ststr;
-	int cenv = 0, res = -1;
+	int cenv = 0, res = 0;
 	const char *t = ":";
 	char *senv, *spath, *cat;
 
@@ -166,10 +165,7 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 	{
 		cat = malloc(sizeof(char) * (_strlen(spath) + _strlen(sargs[0]) + 2));
 		if (cat == NULL)
-		{
-			free(senv);
-			return (NULL);
-		}
+			break;
 		_strcpy(cat, spath);
 		if (spath[0] != '\0')
 			_strcat(cat, "/");
@@ -182,19 +178,7 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 	}
 	if (res == -1)
 	{
-		cat = malloc(sizeof(char) * 1024);
-		cat[0] = '\0';
-		if (!(strncmp(sargs[0], "./", 2)) || !(strncmp(sargs[0], "../", 3)))
-			pthexp(sargs[0], cat);
-		else if (!(strncmp(sargs[0], "/", 1)))
-			_strcpy(cat, sargs[0]);
-		res = stat(cat, &ststr);
-		if (res == -1)
-		{
-			_printf(STDERR_FILENO, "%s: %d: %s: not found\n", argv[0], line, sargs[0]);
-			free(cat);
-			cat = NULL;
-		}
+		cat = afterpath(sargs, argv, line);
 	}
 	free(senv);
 	return (cat);
