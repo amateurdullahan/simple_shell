@@ -147,7 +147,7 @@ char **getsargs(char *buff)
 char *cmdcall(char **argv, char **env, char **sargs, int line)
 {
 	struct stat ststr;
-	int cenv = 0, res = 0;
+	int cenv = 0, res = -1;
 	const char *t = ":";
 	char *senv, *spath, *cat;
 
@@ -165,7 +165,10 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 	{
 		cat = malloc(sizeof(char) * (_strlen(spath) + _strlen(sargs[0]) + 2));
 		if (cat == NULL)
-			break;
+		{
+			free(senv);
+			return (NULL);
+		}
 		_strcpy(cat, spath);
 		if (spath[0] != '\0')
 			_strcat(cat, "/");
