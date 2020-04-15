@@ -9,7 +9,9 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdarg.h>
+#include <errno.h>
 
+extern int errno;
 
 char **tokenize(char *buff);
 char *cmdcall(char **argv, char **env, char **sargs, int line);
@@ -26,6 +28,7 @@ void pthexp(char *rel, char *dest);
 char *trimbuff(char *buff);
 int _strlen(char *str);
 char *afterpath(char **sargs, char **argv, int line);
+void prerr(char **argv, char **sargs, int line);
 
 /* PRINTF FUNCTIONS */
 

@@ -38,13 +38,17 @@ int main(int argc, char **argv, char **env)
 		cmd = cmdcall(argv, env, sargs, line);
 		if (cmd != NULL)
 		{
-			res = chexe(cmd, sargs, env);
-			wait(&stat);
-			free(cmd);
-			if (WEXITSTATUS(stat) == -1)
-				err = 126;
+			if (errno != 13)
+			{
+				res = chexe(cmd, sargs, env);
+				wait(&stat);
+			}
 			else
-				err = res;
+			{
+				err = 126;
+				prerr(argv, sargs, line);
+			}
+			free(cmd);
 		}
 		else
 			err = 127;
@@ -183,6 +187,7 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 	{
 		cat = afterpath(sargs, argv, line);
 	}
+	access(cat, X_OK);
 	free(senv);
 	return (cat);
 }

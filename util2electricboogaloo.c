@@ -124,19 +124,33 @@ char *afterpath(char **sargs, char **argv, int line)
 	res = stat(cat, &ststr);
 	if (res == -1)
 	{
-		tmp2 = malloc(1024);
-		_itoa(line, tmp2, 10);
-		tmp = malloc(sizeof(char) *
-			(_strlen(argv[0]) + _strlen(sargs[0]) + _strlen(tmp2) + 5));
-		_strcpy(tmp, argv[0]);
-		_strcat(tmp, ": ");
-		_strcat(tmp, tmp2);
-		_strcat(tmp, ": ");
-		_strcat(tmp, sargs[0]);
-		perror(tmp);
-		free(cat), free(tmp), free(tmp2);
+		prerr(argv, sargs, line);
+		free(cat);
 		cat = NULL;
 	}
 
 	return (cat);
+}
+
+/**
+ * prerr - prints error messages
+ * @argv: prog args
+ * @line: line number
+ * @sargs: command args
+ */
+void prerr(char **argv, char **sargs, int line)
+{
+	char *num = malloc(1024);
+	char *str;
+
+	_itoa(line, num, 10);
+	str = malloc(sizeof(char) *
+		(_strlen(argv[0]) + _strlen(num) + _strlen(sargs[0]) + 5));
+	_strcpy(str, argv[0]);
+	_strcat(str, ": ");
+	_strcat(str, num);
+	_strcat(str, ": ");
+	_strcat(str, sargs[0]);
+
+	perror(str);
 }
