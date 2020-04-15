@@ -11,14 +11,16 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int line = 0;
+	int err = 0, line = 0, res, stat;
 	char *cmd, **sargs, *buff;
 
 	while (argc)
 	{
 		line++;
 		buff = prepbuff();
-		if (buff[0] == '\0')
+		if (buff == NULL)
+			break;
+		else if (buff[0] == '\0')
 			continue;
 		else if (!(_strcmp(buff, "exit")) && _strlen(buff) > 3)
 			exitbltin(buff);
@@ -31,20 +33,27 @@ int main(int argc, char **argv, char **env)
 		if (sargs == NULL)
 		{
 			free(buff);
-			return (1);
+			err = 1;
+			break;
 		}
 		cmd = cmdcall(argv, env, sargs, line);
 		if (cmd != NULL)
 		{
-			chexe(cmd, sargs, env);
-			wait(NULL);
+			res = chexe(cmd, sargs, env);
+			wait(&stat);
 			free(cmd);
+			if (WEXITSTATUS(stat) == -1)
+				err = 126;
+			else
+				err = res;
 		}
+		else
+			err = 127;
 
 		free(sargs);
 		free(buff);
 	}
-	return (0);
+	return (err);
 }
 
 /**
@@ -62,14 +71,14 @@ char *prepbuff()
 	if (buff == NULL)
 		exit(1);
 	if (isatty(STDIN_FILENO))
-		printf("$ ");
+		_printf(STDOUT_FILENO, "$ ");
 	res = getline(&buff, &buffsize, stdin);
 	if (res == -1)
 	{
 		free(buff);
 		if (isatty(STDIN_FILENO))
-			printf("\n");
-		exit(1);
+			_printf(STDOUT_FILENO, "\n");
+		return (NULL);
 	}
 	for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
 		;
@@ -89,15 +98,22 @@ char *prepbuff()
 
 int chexe(char *cmd, char **sargs, char **env)
 {
-	int cpid;
+	int cpid, res = 0;
 
 	cpid = fork();
 	if (cpid == -1)
-		printf("Fork failed");
+	{
+		_printf(STDERR_FILENO, "Fork failed");
+		res = 1;
+	}
 	else if (cpid == 0)
+	{
 		execve(cmd, sargs, env);
+		printf("we no die");
+		exit(res);
+	}
 
-	return (cpid);
+	return (res);
 }
 
 /**
@@ -178,7 +194,7 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 		res = stat(cat, &ststr);
 		if (res == -1)
 		{
-			printf("%s: %d: %s: not found\n", argv[0], line, sargs[0]);
+			_printf(STDERR_FILENO, "%s: %d: %s: not found\n", argv[0], line, sargs[0]);
 			free(cat);
 			cat = NULL;
 		}

@@ -7,7 +7,7 @@
  * Return: char count
  */
 
-int _printf(const char *format, ...)
+int _printf(int fd, const char *format, ...)
 {
 
   va_list vat;
@@ -21,14 +21,14 @@ int _printf(const char *format, ...)
     {
       if (*format != '%')
 	{
-	  _putchar(*format);
+	  _putchar(fd, *format);
 	  format++;
 	  len++;
 	  continue;
 	}
       else if (*format == '\0')
 	break;
-      len += print_conv(format, vat);
+      len += print_conv(fd, format, vat);
       format++;
       format++;
     }
@@ -42,11 +42,11 @@ int _printf(const char *format, ...)
  *
  * Return: string printed
  */
-void _puts(char *str)
+void _puts(int fd, char *str)
 {
   while (*str != '\0')
     {
-      _putchar(*str);
+      _putchar(fd, *str);
       str++;
     }
 }
@@ -57,9 +57,9 @@ void _puts(char *str)
  *
  * Return: Char printed to stdout;
  */
-int _putchar(char c)
+int _putchar(int fd, char c)
 {
-  return (write(1, &c, 1));
+  return (write(fd, &c, 1));
 }
 
 /**
@@ -70,7 +70,7 @@ int _putchar(char c)
  * Return: count
  */
 
-int print_conv(const char *str, va_list arg)
+int print_conv(int fd, const char *str, va_list arg)
 {
   int count, c;
   char *s = malloc(sizeof(str));
@@ -80,30 +80,30 @@ int print_conv(const char *str, va_list arg)
   switch (*str)
     {
     case 's':
-      count = (print_s(str, arg));
+      count = (print_s(fd, arg));
       free(s);
       return (count);
     case 'c':
       c = va_arg(arg, int);
-      _putchar(c);
+      _putchar(fd, c);
       count++;
       free(s);
       return (count);
     case 'd':
       s = _itoa(va_arg(arg, int), s, 10);
-      _puts(s);
+      _puts(fd, s);
       count += _strlen(s);
       free(s);
       return (count);
     case 'i':
       s = _itoa(va_arg(arg, int), s, 10);
-      _puts(s);
+      _puts(fd, s);
       count += _strlen(s);
       free(s);
       return (count);
     default:
-      _putchar('%');
-      _putchar(*str);
+      _putchar(fd, '%');
+      _putchar(fd, *str);
       count = 2;
       free(s);
       return (count);
@@ -118,7 +118,7 @@ int print_conv(const char *str, va_list arg)
  * Return: length of string
  */
 
-int print_s(const char *str, va_list arg)
+int print_s(int fd, va_list arg)
 {
   char *s;
   int count;
@@ -130,7 +130,7 @@ int print_s(const char *str, va_list arg)
     }
   else
     {
-      _puts(s);
+      _puts(fd, s);
       count = _strlen(s);
     }
   return (count);
