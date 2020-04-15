@@ -13,7 +13,6 @@ int main(int argc, char **argv, char **env)
 {
 	int err = 0, line = 0, res, stat;
 	char *cmd, **sargs, *buff;
-
 	while (argc)
 	{
 		line++;
@@ -49,7 +48,6 @@ int main(int argc, char **argv, char **env)
 		}
 		else
 			err = 127;
-
 		free(sargs);
 		free(buff);
 	}
@@ -141,10 +139,10 @@ char **getsargs(char *buff)
  * cmdcall - get command to be executed
  * @argv: dbl pointer containing array of arguments
  * @env: dbl pointer containing enviromental variables
- * @buff: pointer containing buff of stdin
  * @sargs: dbl pointer containing tokenized shell arguments
+ * @line: line number
  *
- * Return: concatenated pointer containing working command and arguements
+ * Return: concatenated pointer containing working command
  */
 
 char *cmdcall(char **argv, char **env, char **sargs, int line)
