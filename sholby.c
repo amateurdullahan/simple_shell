@@ -11,15 +11,16 @@
 
 int main(int argc, char **argv, char **env)
 {
-	int i, res, cpid = -1;
 	char *cmd, **sargs, *buff;
 
-	while (1)
+	while (argc)
 	{
 		buff = prepbuff();
-		if (!(_strcmp(buff, "exit")))
+		if (buff[0] == '\0')
+			continue;
+		else if (!(_strcmp(buff, "exit")) && _strlen(buff) > 3)
 			exitbltin(buff);
-		else if (!(_strcmp(buff, "env")))
+		else if (!(_strcmp(buff, "env")) && _strlen(buff) > 2)
 		{
 			envbltin(buff, env);
 			continue;
@@ -30,7 +31,7 @@ int main(int argc, char **argv, char **env)
 			free(buff);
 			return (1);
 		}
-		cmd = cmdcall(argv, env, buff, sargs);
+		cmd = cmdcall(argv, env, sargs);
 		if (cmd != NULL)
 		{
 			chexe(cmd, sargs, env);
@@ -40,8 +41,6 @@ int main(int argc, char **argv, char **env)
 
 		free(sargs);
 		free(buff);
-		if (!(isatty(STDIN_FILENO)))
-			return (0);
 	}
 	return (0);
 }
@@ -66,13 +65,14 @@ char *prepbuff()
 	if (res == -1)
 	{
 		free(buff);
-		printf("\n");
+		if (isatty(STDIN_FILENO))
+			printf("\n");
 		exit(1);
 	}
 	for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
 		;
 	buff[i] = '\0';
-
+	buff = trimbuff(buff);
 	return (buff);
 }
 
@@ -91,15 +91,11 @@ int chexe(char *cmd, char **sargs, char **env)
 
 	cpid = fork();
 	if (cpid == -1)
-	{
 		printf("Fork failed");
-		return (-1);
-	}
 	else if (cpid == 0)
-	{
 		execve(cmd, sargs, env);
-		return (0);
-	}
+
+	return (cpid);
 }
 
 /**
@@ -134,10 +130,10 @@ char **getsargs(char *buff)
  * Return: concatenated pointer containing working command and arguements
  */
 
-char *cmdcall(char **argv, char **env, char *buff, char **sargs)
+char *cmdcall(char **argv, char **env, char **sargs)
 {
 	struct stat ststr;
-	int cenv = 0, res;
+	int cenv = 0, res = -1;
 	const char *t = ":";
 	char *senv, *spath, *cat;
 
@@ -167,8 +163,19 @@ char *cmdcall(char **argv, char **env, char *buff, char **sargs)
 	}
 	if (res == -1)
 	{
-		printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
-		cat = NULL;
+		cat = malloc(sizeof(char) * 1024);
+		cat[0] = '\0';
+		if (!(strncmp(sargs[0], "./", 2)) || !(strncmp(sargs[0], "../", 3)))
+			pthexp(sargs[0], cat);
+		else if (!(strncmp(sargs[0], "/", 1)))
+			_strcpy(cat, sargs[0]);
+		res = stat(cat, &ststr);
+		if (res == -1)
+		{
+			printf("%s: 1: %s does not exist\n", argv[0], sargs[0]);
+			free(cat);
+			cat = NULL;
+		}
 	}
 	free(senv);
 	return (cat);
