@@ -3,39 +3,30 @@
 /**
  * tokenize - parse buff into tokens
  * @buff: pointer to be tokenized
+ * @delim: delimiter to split at
  *
  * Return: pointer to array of tokens
  */
 
-char **tokenize(char *buff)
+char **tokenize(char *buff, char delim)
 {
-	int i, j, k, l = 0, m = 0, tkount = 0;
-	char **tokens;
+	int i, k, j, d, len = _strlen(buff);
+	char **toks = malloc(sizeof(char *) * 1024);
 
-	for (i = 0; buff[i]; i++)
+	for (i = 0, k = 0, j = 0; i <= len; i++)
 	{
-		if (buff[i] == ' ' || buff[i] == '\0')
-			tkount++;
+		if (buff[i] == delim || buff[i] == '\0')
+		{
+			toks[k] = malloc(sizeof(char) * (i - j + 1));
+			for (d = 0; j + d < i; d++)
+				toks[k][d] = buff[j + d];
+			toks[k][d] = '\0';
+			j = i + 1;
+			k++;
+		}
 	}
-	tokens = malloc(sizeof(char *) * (tkount + 1));
-
-	for (i = 0; i < tkount; i++)
-	{
-		k = 0;
-		while (buff[k + l] != ' ' && buff[k + l] != '\0')
-		k++;
-		l += k;
-		if (buff[l] != '\0')
-			l++;
-		tokens[i] = malloc(sizeof(char) * (k + 1));
-		for (j = 0; buff[m] != ' ' && buff[m] != '\0'; j++, m++)
-			tokens[i][j] = buff[m];
-		if (buff[m] != '\0')
-			m++;
-		tokens[i][j] = '\0';
-	}
-	tokens[i] = NULL;
-	return (tokens);
+	toks[k] = NULL;
+	return (toks);
 }
 
 /**
@@ -124,7 +115,7 @@ char *afterpath(char **sargs, char **argv, int line)
 	res = stat(cat, &ststr);
 	if (res == -1)
 	{
-		prerr(argv, sargs, line);
+		prerr(argv, sargs, line, 127);
 		free(cat);
 		cat = NULL;
 	}
@@ -137,8 +128,9 @@ char *afterpath(char **sargs, char **argv, int line)
  * @argv: prog args
  * @line: line number
  * @sargs: command args
+ * @err: error number
  */
-void prerr(char **argv, char **sargs, int line)
+void prerr(char **argv, char **sargs, int line, int err)
 {
 	char *num = malloc(1024);
 	char *str;
@@ -152,5 +144,11 @@ void prerr(char **argv, char **sargs, int line)
 	_strcat(str, ": ");
 	_strcat(str, sargs[0]);
 
-	perror(str);
+	if (err == 127)
+		_printf(STDERR_FILENO, "%s: not found\n", str);
+	else if (err == 126)
+		_printf(STDERR_FILENO, "%s: Permission denied\n", str);
+
+	free(num);
+	free(str);
 }
