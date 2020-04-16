@@ -148,6 +148,8 @@ void prerr(char **argv, char **sargs, int line, int err)
 		_printf(STDERR_FILENO, "%s: not found\n", str);
 	else if (err == 126)
 		_printf(STDERR_FILENO, "%s: Permission denied\n", str);
+	else if (err == 666)
+		_printf(STDERR_FILENO, "%s: Illegal number: %s\n", str, sargs[1]);
 
 	free(num);
 	free(str);

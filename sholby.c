@@ -21,7 +21,8 @@ int main(int argc, char **argv, char **env)
 		else if (buff[0] == '\0')
 			continue;
 		else if (!(_strcmp(buff, "exit")) && _strlen(buff) > 3)
-			exitbltin(buff);
+		{exitbltin(buff, argv, line);
+			continue; }
 		else if (!(_strcmp(buff, "env")) && _strlen(buff) > 2)
 		{envbltin(buff, env);
 			continue;
