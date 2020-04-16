@@ -9,8 +9,18 @@
 
 void exitbltin(char *buff)
 {
-	free(buff);
-	exit(0);
+  int i, e;
+  const char *c = " ";
+  char **exitcode;
+  exitcode = malloc(sizeof(char *) * 100);
+  exitcode[0] = strtok(buff, c);
+  for (i = 0; i < 1; i++)
+    exitcode[i + 1] = strtok(NULL, c);
+
+  e = _atoi(exitcode[i]);
+  free(exitcode);
+  free(buff);
+  exit(e);
 }
 
 /**
