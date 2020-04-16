@@ -83,7 +83,7 @@ void _swap(char *x, char *y)
 
 /**
  * _atoi - converts string to integer
- * @str: string to convert
+ * @s: string to convert
  *
  * Return: converted string
  */
