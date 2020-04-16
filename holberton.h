@@ -37,5 +37,6 @@ char *_reverse(char *buffer, int i, int j);
 void _swap(char *x, char *y);
 int print_conv(int fd, const char *str, va_list arg);
 int print_s(int fd, va_list arg);
+int _atoi(char *s);
 
 #endif /* HOLBERTON_H */
