@@ -9,7 +9,7 @@
 
 void exitbltin(char *buff)
 {
-  int i, e;
+  int i, e, f;
   const char *c = " ";
   char **exitcode;
   exitcode = malloc(sizeof(char *) * 100);
@@ -17,9 +17,16 @@ void exitbltin(char *buff)
   for (i = 0; i < 1; i++)
     exitcode[i + 1] = strtok(NULL, c);
 
+  for (f = 0; exitcode[i][f]; f++)
+    {
+      if (exitcode[i][f] < '0' || exitcode[i][f] > '9')
+	return;
+    }
   e = _atoi(exitcode[i]);
   free(exitcode);
   free(buff);
+  if (e > 255)
+    e = e - 256;
   exit(e);
 }
 
