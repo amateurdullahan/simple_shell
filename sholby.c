@@ -10,7 +10,7 @@
  */
 
 int main(int argc, char **argv, char **env)
-{int err = 0, line = 0, stat;
+{int i, err = 0, line = 0, stat;
 	char *cmd, **sargs, *buff;
 
 	while (argc)
@@ -26,11 +26,10 @@ int main(int argc, char **argv, char **env)
 		{envbltin(buff, env);
 			continue;
 		}
-		sargs = getsargs(buff);
+		sargs = tokenize(buff, ' ');
+		free(buff);
 		if (sargs == NULL)
-		{free(buff);
 			return (1);
-		}
 		cmd = cmdcall(argv, env, sargs, line);
 		if (cmd != NULL)
 		{
@@ -40,13 +39,15 @@ int main(int argc, char **argv, char **env)
 			}
 			else
 			{err = 126;
-				prerr(argv, sargs, line);
+				prerr(argv, sargs, line, err);
 			}
 			free(cmd);
 		}
 		else
 			err = 127;
-		free(sargs), free(buff);
+		for (i = 0; sargs[i] != NULL; i++)
+			free(sargs[i]);
+		free(sargs);
 	}
 	return (err);
 }
@@ -145,9 +146,8 @@ char **getsargs(char *buff)
 char *cmdcall(char **argv, char **env, char **sargs, int line)
 {
 	struct stat ststr;
-	int cenv = 0, res = -1;
-	const char *t = ":";
-	char *senv, *spath, *cat;
+	int i, cenv = 0, res = -1;
+	char *senv, **spath, *cat;
 
 	while (_strncmp(env[cenv], "PATH", 4))
 		cenv++;
@@ -155,33 +155,33 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 	if (senv == NULL)
 		return (NULL);
 	_strcpy(senv, (env[cenv] + 5));
-	if (senv[0] == ':')
-		spath = "";
-	else
-		spath = strtok(senv, t);
-	while (spath != NULL)
+	spath = tokenize(senv, ':');
+	for (i = 0; spath[i] != NULL; i++)
 	{
-		cat = malloc(sizeof(char) * (_strlen(spath) + _strlen(sargs[0]) + 2));
+		cat = malloc(sizeof(char) * (_strlen(spath[i]) + _strlen(sargs[0]) + 2));
 		if (cat == NULL)
 		{
 			free(senv);
 			return (NULL);
 		}
-		_strcpy(cat, spath);
-		if (spath[0] != '\0')
+		_strcpy(cat, spath[i]);
+		if (spath[i][0] != '\0')
 			_strcat(cat, "/");
 		_strcat(cat, sargs[0]);
 		res = stat(cat, &ststr);
 		if (res == 0)
 			break;
-		spath = strtok(NULL, t);
 		free(cat);
 	}
 	if (res == -1)
 	{
 		cat = afterpath(sargs, argv, line);
 	}
-	access(cat, X_OK);
+	if (cat != NULL)
+		access(cat, X_OK);
 	free(senv);
+	for (i = 0; spath[i] != NULL; i++)
+		free(spath[i]);
+	free(spath);
 	return (cat);
 }
