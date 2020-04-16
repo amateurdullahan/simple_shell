@@ -113,28 +113,6 @@ int chexe(char *cmd, char **sargs, char **env)
 }
 
 /**
- * getsargs - get shell arguments
- * @buff: pointer containing arguments to be parsed
- *
- * Return: dbl pointer containing tokenized arguments
- */
-
-char **getsargs(char *buff)
-{
-	int i;
-	char **sargs;
-	const char *s = " ";
-
-	sargs = malloc(sizeof(char *) * 100);
-	if (sargs == NULL)
-		return (NULL);
-	sargs[0] = strtok(buff, s);
-	for (i = 0; sargs[i] != NULL; i++)
-		sargs[i + 1] = strtok(NULL, s);
-	return (sargs);
-}
-
-/**
  * cmdcall - get command to be executed
  * @argv: dbl pointer containing array of arguments
  * @env: dbl pointer containing enviromental variables

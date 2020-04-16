@@ -15,7 +15,6 @@ extern int errno;
 
 char **tokenize(char *buff, char delim);
 char *cmdcall(char **argv, char **env, char **sargs, int line);
-char **getsargs(char *buff);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int _strncmp(char *s1, char *s2, int n);
