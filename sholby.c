@@ -10,7 +10,7 @@
  */
 
 int main(int argc, char **argv, char **env)
-{int i, err = 0, line = 0;
+{int i, err = 0, line = 0, ststr;
 	char *cmd, **sargs, *buff;
 
 	while (argc)
@@ -32,7 +32,7 @@ int main(int argc, char **argv, char **env)
 		{
 			if (err != 126)
 			{chexe(cmd, sargs, env, &err);
-				wait(NULL), err = 0; }
+				wait(&ststr), err = WEXITSTATUS(ststr); }
 			else
 				prerr(argv, sargs, line, err);
 			free(cmd); }
@@ -66,7 +66,8 @@ char *prepbuff()
 			_printf(STDOUT_FILENO, "\n");
 		return (NULL);
 	}
-	for (i = 0; buff[i] != '\n' && buff[i] != '\0'; i++)
+	for (i = 0; buff[i] != '\n' && buff[i] != '\0' &&
+		(buff[i] != '#' || ((i > 0) ? (buff[i - 1] != ' ') : 0)); i++)
 		;
 	buff[i] = '\0';
 	buff = trimbuff(buff);
