@@ -9,9 +9,9 @@
  * Return: void
  */
 
-void exitbltin(char *buff, char **argv, int line)
+void exitbltin(char *buff, char **argv, int line, int *err)
 {
-	int i, e = errno, f;
+	int i, f;
 	char **exitcode;
 
 	exitcode = tokenize(buff, ' ');
@@ -26,17 +26,19 @@ void exitbltin(char *buff, char **argv, int line)
 				for (i = 0; exitcode[i] != NULL; i++)
 					free(exitcode[i]);
 				free(exitcode);
-				return;
+				if (isatty(STDIN_FILENO))
+					return;
+				exit(2);
 			}
 		}
-		e = _atoi(exitcode[1]);
-		if (e > 255)
-			e = e - 256;
+		*err = _atoi(exitcode[1]);
+		if (*err > 255)
+			*err = *err % 256;
 	}
 	for (i = 0; exitcode[i] != NULL; i++)
 		free(exitcode[i]);
 	free(exitcode);
-	exit(e);
+	exit(*err);
 }
 
 /**

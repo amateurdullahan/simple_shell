@@ -10,7 +10,7 @@
  */
 
 int main(int argc, char **argv, char **env)
-{int i, err = 0, line = 0, stat;
+{int i, err = 0, line = 0;
 	char *cmd, **sargs, *buff;
 
 	while (argc)
@@ -21,31 +21,25 @@ int main(int argc, char **argv, char **env)
 		else if (buff[0] == '\0')
 			continue;
 		else if (!(_strcmp(buff, "exit")) && _strlen(buff) > 3)
-		{exitbltin(buff, argv, line);
+		{exitbltin(buff, argv, line, &err);
 			continue; }
 		else if (!(_strcmp(buff, "env")) && _strlen(buff) > 2)
 		{envbltin(buff, env);
-			continue;
-		}
+			continue; }
 		sargs = tokenize(buff, ' ');
 		free(buff);
-		if (sargs == NULL)
-			return (1);
-		cmd = cmdcall(argv, env, sargs, line);
+		cmd = cmdcall(argv, env, sargs, line, &err);
 		if (cmd != NULL)
 		{
-			if (errno != 13)
-			{chexe(cmd, sargs, env);
-				wait(&stat);
+			if (err != 126)
+			{chexe(cmd, sargs, env, &err);
+				wait(NULL);
+				err = 0;
 			}
 			else
-			{err = 126;
 				prerr(argv, sargs, line, err);
-			}
 			free(cmd);
 		}
-		else
-			err = 127;
 		for (i = 0; sargs[i] != NULL; i++)
 			free(sargs[i]);
 		free(sargs);
@@ -93,23 +87,18 @@ char *prepbuff()
  * Return: 0 if successful OR -1 if failure
  */
 
-int chexe(char *cmd, char **sargs, char **env)
+void chexe(char *cmd, char **sargs, char **env, int *err)
 {
-	int cpid, res = 0;
+	int cpid;
 
 	cpid = fork();
 	if (cpid == -1)
 	{
 		_printf(STDERR_FILENO, "Fork failed");
-		res = 1;
+		*err = 1;
 	}
 	else if (cpid == 0)
-	{
-		res = execve(cmd, sargs, env);
-		exit(res);
-	}
-
-	return (res);
+		execve(cmd, sargs, env);
 }
 
 /**
@@ -122,10 +111,10 @@ int chexe(char *cmd, char **sargs, char **env)
  * Return: concatenated pointer containing working command
  */
 
-char *cmdcall(char **argv, char **env, char **sargs, int line)
+char *cmdcall(char **argv, char **env, char **sargs, int line, int *err)
 {
 	struct stat ststr;
-	int i, cenv = 0, res = -1;
+	int i, cenv = 0;
 	char *senv, **spath, *cat;
 
 	while (_strncmp(env[cenv], "PATH", 4))
@@ -147,17 +136,20 @@ char *cmdcall(char **argv, char **env, char **sargs, int line)
 		if (spath[i][0] != '\0')
 			_strcat(cat, "/");
 		_strcat(cat, sargs[0]);
-		res = stat(cat, &ststr);
-		if (res == 0)
+		*err = stat(cat, &ststr);
+		if (*err == 0)
 			break;
 		free(cat);
 	}
-	if (res == -1)
-	{
+	if (*err == -1)
 		cat = afterpath(sargs, argv, line);
-	}
 	if (cat != NULL)
-		access(cat, X_OK);
+	{
+		if (access(cat, X_OK) == -1)
+			*err = 126;
+	}
+	else
+		*err = 127;
 	free(senv);
 	for (i = 0; spath[i] != NULL; i++)
 		free(spath[i]);

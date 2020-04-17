@@ -11,16 +11,14 @@
 #include <stdarg.h>
 #include <errno.h>
 
-extern int errno;
-
 char **tokenize(char *buff, char delim);
-char *cmdcall(char **argv, char **env, char **sargs, int line);
+char *cmdcall(char **argv, char **env, char **sargs, int line, int *err);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int _strncmp(char *s1, char *s2, int n);
 char *_strcat(char *dest, char *src);
-int chexe(char *cmd, char **sargs, char **env);
-void exitbltin(char *buff, char **argv, int line);
+void chexe(char *cmd, char **sargs, char **env, int *err);
+void exitbltin(char *buff, char **argv, int line, int *err);
 void envbltin(char *buff, char **env);
 char *prepbuff();
 void pthexp(char *rel, char *dest);
