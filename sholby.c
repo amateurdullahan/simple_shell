@@ -2,7 +2,7 @@
 
 /**
  * main - run basic loop of shell
- * @argc: arguemnt count
+ * @argc: argument count
  * @argv: dbl pointer of arguments
  * @env: dbl pointer of enviroment variables
  *
