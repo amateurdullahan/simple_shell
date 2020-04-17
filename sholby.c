@@ -26,24 +26,19 @@ int main(int argc, char **argv, char **env)
 		else if (!(_strcmp(buff, "env")) && _strlen(buff) > 2)
 		{envbltin(buff, env);
 			continue; }
-		sargs = tokenize(buff, ' ');
-		free(buff);
+		sargs = tokenize(buff, ' '), free(buff);
 		cmd = cmdcall(argv, env, sargs, line, &err);
 		if (cmd != NULL)
 		{
 			if (err != 126)
 			{chexe(cmd, sargs, env, &err);
-				wait(NULL);
-				err = 0;
-			}
+				wait(NULL), err = 0; }
 			else
 				prerr(argv, sargs, line, err);
-			free(cmd);
-		}
+			free(cmd); }
 		for (i = 0; sargs[i] != NULL; i++)
 			free(sargs[i]);
-		free(sargs);
-	}
+		free(sargs); }
 	return (err);
 }
 
@@ -83,6 +78,7 @@ char *prepbuff()
  * @cmd: command to be executed
  * @sargs: dbl pointer containing arguments for command
  * @env: dbl pointer containing enviromental variables
+ * @err: custom errno
  *
  * Return: 0 if successful OR -1 if failure
  */
@@ -107,6 +103,7 @@ void chexe(char *cmd, char **sargs, char **env, int *err)
  * @env: dbl pointer containing enviromental variables
  * @sargs: dbl pointer containing tokenized shell arguments
  * @line: line number
+ * @err: custom errno
  *
  * Return: concatenated pointer containing working command
  */
@@ -128,10 +125,8 @@ char *cmdcall(char **argv, char **env, char **sargs, int line, int *err)
 	{
 		cat = malloc(sizeof(char) * (_strlen(spath[i]) + _strlen(sargs[0]) + 2));
 		if (cat == NULL)
-		{
-			free(senv);
-			return (NULL);
-		}
+		{free(senv);
+			return (NULL); }
 		_strcpy(cat, spath[i]);
 		if (spath[i][0] != '\0')
 			_strcat(cat, "/");

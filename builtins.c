@@ -5,6 +5,7 @@
  * @buff: line containing exit command
  * @argv: args
  * @line: line number
+ * @err: custom errno
  *
  * Return: void
  */
